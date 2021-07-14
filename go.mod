@@ -1,7 +1,9 @@
 module github.com/aquasecurity/trivy
 
 go 1.16
-
+replace (
+	github.com/aquasecurity/trivy-db => ../trivy-db
+)
 require (
 	github.com/Masterminds/goutils v1.1.1 // indirect
 	github.com/Masterminds/sprig v2.22.0+incompatible

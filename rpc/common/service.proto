@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 import "google/protobuf/timestamp.proto";
-
+import "google/protobuf/struct.proto";
 package trivy.common;
 option  go_package = "github.com/aquasecurity/trivy/rpc/common;common";
 
@@ -91,6 +91,7 @@ message Vulnerability {
   string                    primary_url        = 14;
   google.protobuf.Timestamp published_date     = 15;
   google.protobuf.Timestamp last_modified_date = 16;
+  google.protobuf.Value     custom_data =17;
 }
 
 message Layer {

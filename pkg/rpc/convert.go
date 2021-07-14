@@ -3,6 +3,8 @@ package rpc
 import (
 	"time"
 
+	"google.golang.org/protobuf/types/known/structpb"
+
 	"github.com/golang/protobuf/ptypes"
 	"github.com/golang/protobuf/ptypes/timestamp"
 
@@ -100,12 +102,16 @@ func ConvertToRPCVulns(vulns []types.DetectedVulnerability) []*common.Vulnerabil
 		}
 
 		var lastModifiedDate, publishedDate *timestamp.Timestamp
+		var customData *structpb.Value
 		if vuln.LastModifiedDate != nil {
 			lastModifiedDate, _ = ptypes.TimestampProto(*vuln.LastModifiedDate) // nolint: errcheck
 		}
 
 		if vuln.PublishedDate != nil {
 			publishedDate, _ = ptypes.TimestampProto(*vuln.PublishedDate) // nolint: errcheck
+		}
+		if vuln.CustomData != nil {
+			customData, _ = structpb.NewValue(vuln.CustomData)
 		}
 
 		rpcVulns = append(rpcVulns, &common.Vulnerability{
@@ -124,6 +130,7 @@ func ConvertToRPCVulns(vulns []types.DetectedVulnerability) []*common.Vulnerabil
 			PrimaryUrl:       vuln.PrimaryURL,
 			LastModifiedDate: lastModifiedDate,
 			PublishedDate:    publishedDate,
+			CustomData:       customData,
 		})
 	}
 	return rpcVulns
@@ -219,6 +226,7 @@ func ConvertFromRPCVulns(rpcVulns []*common.Vulnerability) []types.DetectedVulne
 				CweIDs:           vuln.CweIds,
 				LastModifiedDate: lastModifiedDate,
 				PublishedDate:    publishedDate,
+				CustomData:       vuln.CustomData.AsInterface(),
 			},
 			Layer:          ConvertFromRPCLayer(vuln.Layer),
 			SeveritySource: vuln.SeveritySource,
