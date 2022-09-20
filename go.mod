@@ -25,7 +25,7 @@ require (
 	github.com/caarlos0/env/v6 v6.10.0
 	github.com/cenkalti/backoff v2.2.1+incompatible
 	github.com/cheggaaa/pb/v3 v3.1.0
-	github.com/containerd/containerd v1.6.6
+	github.com/containerd/containerd v1.6.8
 	github.com/docker/docker v20.10.17+incompatible
 	github.com/docker/go-connections v0.4.0
 	github.com/fatih/color v1.13.0
@@ -35,7 +35,7 @@ require (
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/golang/protobuf v1.5.2
-	github.com/google/go-containerregistry v0.11.0
+	github.com/google/go-containerregistry v0.8.0
 	github.com/google/licenseclassifier/v2 v2.0.0-pre6
 	github.com/google/uuid v1.3.0
 	github.com/google/wire v0.5.0
@@ -56,13 +56,13 @@ require (
 	github.com/package-url/packageurl-go v0.1.1-0.20220203205134-d70459300c8a
 	github.com/samber/lo v1.27.1
 	github.com/secure-systems-lab/go-securesystemslib v0.4.0
-	github.com/sigstore/rekor v0.12.0
+	github.com/sigstore/rekor v0.2.0
 	github.com/sosedoff/gitkit v0.3.0
 	github.com/spf13/cobra v1.5.0
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.12.0
 	github.com/stretchr/testify v1.8.0
-	github.com/testcontainers/testcontainers-go v0.13.0
+	github.com/testcontainers/testcontainers-go v0.14.0
 	github.com/tetratelabs/wazero v1.0.0-pre.1
 	github.com/twitchtv/twirp v8.1.2+incompatible
 	github.com/xlab/treeprint v1.1.0
@@ -167,7 +167,7 @@ require (
 	github.com/Masterminds/semver/v3 v3.1.1 // indirect
 	github.com/Masterminds/squirrel v1.5.3 // indirect
 	github.com/Microsoft/go-winio v0.5.2 // indirect
-	github.com/Microsoft/hcsshim v0.9.3 // indirect
+	github.com/Microsoft/hcsshim v0.9.4 // indirect
 	github.com/OneOfOne/xxhash v1.2.8 // indirect
 	github.com/ProtonMail/go-crypto v0.0.0-20210428141323-04723f9f07d7 // indirect
 	github.com/VividCortex/ewma v1.1.1 // indirect
@@ -202,7 +202,7 @@ require (
 	github.com/docker/docker-credential-helpers v0.6.4 // indirect
 	github.com/docker/go-events v0.0.0-20190806004212-e31b211e4f1c // indirect
 	github.com/docker/go-metrics v0.0.1 // indirect
-	github.com/docker/go-units v0.4.0 // indirect
+	github.com/docker/go-units v0.5.0 // indirect
 	github.com/ekzhu/minhash-lsh v0.0.0-20171225071031-5c06ee8586a1 // indirect
 	github.com/emirpasic/gods v1.12.0 // indirect
 	github.com/evanphx/json-patch v4.12.0+incompatible // indirect
@@ -356,7 +356,6 @@ require (
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gotest.tools v2.2.0+incompatible
-	gotest.tools/v3 v3.2.0 // indirect
 	helm.sh/helm/v3 v3.9.3 // indirect
 	k8s.io/api v0.25.0-alpha.2 // indirect
 	k8s.io/apiextensions-apiserver v0.24.2 // indirect
