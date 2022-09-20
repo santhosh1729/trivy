@@ -52,6 +52,7 @@ func RegisterDriver(name string, driver Driver) {
 type Driver interface {
 	Detect(string, *ftypes.Repository, []ftypes.Package) ([]types.DetectedVulnerability, error)
 	IsSupportedVersion(string, string) bool
+	AllSupportedVersions() map[string]map[string]time.Time
 }
 
 // Detector implements Operation

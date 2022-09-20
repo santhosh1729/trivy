@@ -2,6 +2,7 @@ package mariner
 
 import (
 	"strings"
+	"time"
 
 	version "github.com/knqyf263/go-rpm-version"
 	"golang.org/x/xerrors"
@@ -80,4 +81,7 @@ func (s *Scanner) Detect(osVer string, _ *ftypes.Repository, pkgs []ftypes.Packa
 func (s *Scanner) IsSupportedVersion(osFamily, osVer string) bool {
 	// EOL is not in public at the moment.
 	return true
+}
+func (s *Scanner) AllSupportedVersions() map[string]map[string]time.Time {
+	return nil
 }

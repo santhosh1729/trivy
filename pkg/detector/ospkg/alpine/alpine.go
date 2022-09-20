@@ -4,6 +4,8 @@ import (
 	"strings"
 	"time"
 
+	fos "github.com/aquasecurity/trivy/pkg/fanal/analyzer/os"
+
 	version "github.com/knqyf263/go-apk-version"
 	"golang.org/x/xerrors"
 	"k8s.io/utils/clock"
@@ -191,4 +193,10 @@ func (s *Scanner) repoRelease(repo *ftypes.Repository) string {
 		release = release[:strings.LastIndex(release, ".")]
 	}
 	return release
+}
+
+func (s *Scanner) AllSupportedVersions() map[string]map[string]time.Time {
+	return map[string]map[string]time.Time{
+		fos.Alpine: eolDates,
+	}
 }

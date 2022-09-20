@@ -4,6 +4,8 @@ import (
 	"strings"
 	"time"
 
+	fos "github.com/aquasecurity/trivy/pkg/fanal/analyzer/os"
+
 	version "github.com/knqyf263/go-deb-version"
 	"golang.org/x/xerrors"
 	"k8s.io/utils/clock"
@@ -151,4 +153,10 @@ func (s *Scanner) IsSupportedVersion(osFamily, osVer string) bool {
 		return false
 	}
 	return s.clock.Now().Before(eol)
+}
+
+func (s *Scanner) AllSupportedVersions() map[string]map[string]time.Time {
+	return map[string]map[string]time.Time{
+		fos.Debian: eolDates,
+	}
 }

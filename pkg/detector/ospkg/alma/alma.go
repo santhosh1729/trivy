@@ -4,6 +4,8 @@ import (
 	"strings"
 	"time"
 
+	fos "github.com/aquasecurity/trivy/pkg/fanal/analyzer/os"
+
 	version "github.com/knqyf263/go-rpm-version"
 	"golang.org/x/xerrors"
 	"k8s.io/utils/clock"
@@ -132,4 +134,9 @@ func addModularNamespace(name, label string) string {
 		}
 	}
 	return name
+}
+func (s *Scanner) AllSupportedVersions() map[string]map[string]time.Time {
+	return map[string]map[string]time.Time{
+		fos.Alma: eolDates,
+	}
 }

@@ -1,6 +1,7 @@
 package ubuntu
 
 import (
+	fos "github.com/aquasecurity/trivy/pkg/fanal/analyzer/os"
 	"time"
 
 	version "github.com/knqyf263/go-deb-version"
@@ -147,4 +148,10 @@ func (s *Scanner) IsSupportedVersion(osFamily, osVer string) bool {
 		return false
 	}
 	return s.clock.Now().Before(eol)
+}
+
+func (s *Scanner) AllSupportedVersions() map[string]map[string]time.Time {
+	return map[string]map[string]time.Time{
+		fos.Ubuntu: eolDates,
+	}
 }

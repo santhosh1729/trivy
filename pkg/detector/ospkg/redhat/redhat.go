@@ -6,6 +6,7 @@ import (
 	"strings"
 	"time"
 
+	fos "github.com/aquasecurity/trivy/pkg/fanal/analyzer/os"
 	version "github.com/knqyf263/go-rpm-version"
 	"golang.org/x/exp/maps"
 	"golang.org/x/exp/slices"
@@ -248,4 +249,11 @@ func addModularNamespace(name, label string) string {
 		}
 	}
 	return name
+}
+
+func (s *Scanner) AllSupportedVersions() map[string]map[string]time.Time {
+	return map[string]map[string]time.Time{
+		fos.RedHat: redhatEOLDates,
+		fos.CentOS: centosEOLDates,
+	}
 }

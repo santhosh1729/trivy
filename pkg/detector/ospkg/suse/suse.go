@@ -163,3 +163,10 @@ func (s *Scanner) IsSupportedVersion(osFamily, osVer string) bool {
 
 	return s.clock.Now().Before(eolDate)
 }
+
+func (s *Scanner) AllSupportedVersions() map[string]map[string]time.Time {
+	return map[string]map[string]time.Time{
+		fos.SLES:         slesEolDates,
+		fos.OpenSUSELeap: opensuseEolDates,
+	}
+}
