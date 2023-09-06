@@ -2,6 +2,8 @@ module github.com/aquasecurity/trivy
 
 go 1.19
 
+replace github.com/saracen/walker => github.com/santhosh1729/walker v0.0.0-20230905143008-a58d99fae237
+
 require (
 	github.com/Azure/azure-sdk-for-go v68.0.0+incompatible
 	github.com/Azure/azure-sdk-for-go/sdk/azcore v1.6.0
