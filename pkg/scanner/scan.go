@@ -6,6 +6,7 @@ import (
 	"github.com/google/wire"
 	"golang.org/x/xerrors"
 
+	"github.com/aquasecurity/trivy/pkg/clock"
 	"github.com/aquasecurity/trivy/pkg/fanal/artifact"
 	aimage "github.com/aquasecurity/trivy/pkg/fanal/artifact/image"
 	flocal "github.com/aquasecurity/trivy/pkg/fanal/artifact/local"
@@ -172,6 +173,7 @@ func (s Scanner) ScanArtifact(ctx context.Context, options types.ScanOptions) (t
 
 	return types.Report{
 		SchemaVersion: report.SchemaVersion,
+		CreatedAt:     clock.Now(ctx),
 		ArtifactName:  artifactInfo.Name,
 		ArtifactType:  artifactInfo.Type,
 		Metadata: types.Metadata{
@@ -184,8 +186,8 @@ func (s Scanner) ScanArtifact(ctx context.Context, options types.ScanOptions) (t
 			RepoDigests: artifactInfo.ImageMetadata.RepoDigests,
 			ImageConfig: artifactInfo.ImageMetadata.ConfigFile,
 		},
-		CycloneDX: artifactInfo.CycloneDX,
-		Results:   results,
+		Results: results,
+		BOM:     artifactInfo.BOM,
 	}, nil
 }
 

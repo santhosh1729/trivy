@@ -3,12 +3,11 @@ package flag_test
 import (
 	"testing"
 
-	"go.uber.org/zap"
-	"go.uber.org/zap/zaptest/observer"
-
 	"github.com/spf13/viper"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"go.uber.org/zap"
+	"go.uber.org/zap/zaptest/observer"
 
 	"github.com/aquasecurity/trivy/pkg/flag"
 	"github.com/aquasecurity/trivy/pkg/log"
@@ -75,9 +74,9 @@ func TestDBFlagGroup_ToOptions(t *testing.T) {
 
 			// Assert options
 			f := &flag.DBFlagGroup{
-				DownloadDBOnly: &flag.DownloadDBOnlyFlag,
-				SkipDBUpdate:   &flag.SkipDBUpdateFlag,
-				Light:          &flag.LightFlag,
+				DownloadDBOnly: flag.DownloadDBOnlyFlag.Clone(),
+				SkipDBUpdate:   flag.SkipDBUpdateFlag.Clone(),
+				Light:          flag.LightFlag.Clone(),
 			}
 			got, err := f.ToOptions()
 			tt.assertion(t, err)

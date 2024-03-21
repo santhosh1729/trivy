@@ -89,7 +89,7 @@ func TestReportWriter_Sarif(t *testing.T) {
 			},
 			want: &sarif.Report{
 				Version: "2.1.0",
-				Schema:  "https://json.schemastore.org/sarif-2.1.0.json",
+				Schema:  "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
 				Runs: []*sarif.Run{
 					{
 						Tool: sarif.Tool{
@@ -197,7 +197,7 @@ func TestReportWriter_Sarif(t *testing.T) {
 								Message:    "Message",
 								Severity:   "HIGH",
 								PrimaryURL: "https://avd.aquasec.com/appshield/ksv001",
-								Status:     types.StatusFailure,
+								Status:     types.MisconfStatusFailure,
 							},
 							{
 								Type:       "Kubernetes Security Check",
@@ -206,7 +206,7 @@ func TestReportWriter_Sarif(t *testing.T) {
 								Message:    "Message",
 								Severity:   "CRITICAL",
 								PrimaryURL: "https://avd.aquasec.com/appshield/ksv002",
-								Status:     types.StatusPassed,
+								Status:     types.MisconfStatusPassed,
 							},
 						},
 					},
@@ -214,7 +214,7 @@ func TestReportWriter_Sarif(t *testing.T) {
 			},
 			want: &sarif.Report{
 				Version: "2.1.0",
-				Schema:  "https://json.schemastore.org/sarif-2.1.0.json",
+				Schema:  "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
 				Runs: []*sarif.Run{
 					{
 						Tool: sarif.Tool{
@@ -338,7 +338,7 @@ func TestReportWriter_Sarif(t *testing.T) {
 					{
 						Target: "library/test",
 						Class:  types.ClassSecret,
-						Secrets: []ftypes.SecretFinding{
+						Secrets: []types.DetectedSecret{
 							{
 								RuleID:    "aws-secret-access-key",
 								Category:  "AWS",
@@ -354,7 +354,7 @@ func TestReportWriter_Sarif(t *testing.T) {
 			},
 			want: &sarif.Report{
 				Version: "2.1.0",
-				Schema:  "https://json.schemastore.org/sarif-2.1.0.json",
+				Schema:  "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
 				Runs: []*sarif.Run{
 					{
 						Tool: sarif.Tool{
@@ -448,7 +448,7 @@ func TestReportWriter_Sarif(t *testing.T) {
 			},
 			want: &sarif.Report{
 				Version: "2.1.0",
-				Schema:  "https://json.schemastore.org/sarif-2.1.0.json",
+				Schema:  "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
 				Runs: []*sarif.Run{
 					{
 						Tool: sarif.Tool{
@@ -518,7 +518,7 @@ func TestReportWriter_Sarif(t *testing.T) {
 			name: "no vulns",
 			want: &sarif.Report{
 				Version: "2.1.0",
-				Schema:  "https://json.schemastore.org/sarif-2.1.0.json",
+				Schema:  "https://raw.githubusercontent.com/oasis-tcs/sarif-spec/master/Schemata/sarif-schema-2.1.0.json",
 				Runs: []*sarif.Run{
 					{
 						Tool: sarif.Tool{
@@ -549,7 +549,7 @@ func TestReportWriter_Sarif(t *testing.T) {
 			w := report.SarifWriter{
 				Output: sarifWritten,
 			}
-			err := w.Write(tt.input)
+			err := w.Write(nil, tt.input)
 			assert.NoError(t, err)
 
 			result := &sarif.Report{}

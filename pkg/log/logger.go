@@ -3,13 +3,13 @@ package log
 import (
 	"os"
 	"runtime"
+	"strings"
 
 	xlog "github.com/masahiro331/go-xfs-filesystem/log"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"golang.org/x/xerrors"
 
-	dlog "github.com/aquasecurity/go-dep-parser/pkg/log"
 	flog "github.com/aquasecurity/trivy/pkg/fanal/log"
 )
 
@@ -31,9 +31,6 @@ func InitLogger(debug, disable bool) (err error) {
 	if err != nil {
 		return xerrors.Errorf("failed to initialize a logger: %w", err)
 	}
-
-	// Set logger for go-dep-parser
-	dlog.SetLogger(Logger)
 
 	// Set logger for fanal
 	flog.SetLogger(Logger)
@@ -120,4 +117,13 @@ func String(key, val string) zap.Field {
 		return zap.Skip()
 	}
 	return zap.String(key, val)
+}
+
+type PrefixedLogger struct {
+	Name string
+}
+
+func (d *PrefixedLogger) Write(p []byte) (n int, err error) {
+	Logger.Debugf("[%s] %s", d.Name, strings.TrimSpace(string(p)))
+	return len(p), nil
 }

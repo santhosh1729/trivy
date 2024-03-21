@@ -112,8 +112,9 @@ scan:
   # Default depends on subcommand
   scanners:
     - vuln
-    - config
+    - misconfig
     - secret
+    - license
 ```
 
 ## Cache Options
@@ -202,6 +203,11 @@ image:
     # Same as '--docker-host'
     # Default is empty
     host: 
+  
+  podman:
+    # Same as '--podman-host'
+    # Default is empty
+    host: 
 ```
 
 ## Vulnerability Options
@@ -265,6 +271,12 @@ misconfiguration:
   # Same as '--include-non-failures'
   # Default is false
   include-non-failures: false
+  
+  # Same as '--miconfig-scanners'
+  # Default is all scanners
+  scanners:
+    - dockerfile
+    - terraform
 
   # helm value override configurations
   # set individual values

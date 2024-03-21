@@ -27,13 +27,18 @@ $ ./trivy -h
 You must pass the linter checks:
 
 ```shell
-$ mage lint
+$ mage lint:run
 ```
 
 Additionally, you need to have run `go mod tidy`, so execute the following command as well:
 
 ```shell
 $ mage tidy
+```
+
+To autofix linters use the following command:
+```shell
+$ mage lint:fix
 ```
 
 ### Unit tests
@@ -173,6 +178,7 @@ others:
 - helm
 - report
 - db
+- parser
 - deps
 
 The `<scope>` can be empty (e.g. if the change is a global or difficult to assign to a single component), in which case the parentheses are omitted.

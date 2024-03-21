@@ -6,7 +6,6 @@ import (
 	"github.com/stretchr/testify/assert"
 
 	dbTypes "github.com/aquasecurity/trivy-db/pkg/types"
-	ftypes "github.com/aquasecurity/trivy/pkg/fanal/types"
 	"github.com/aquasecurity/trivy/pkg/types"
 )
 
@@ -15,42 +14,50 @@ var (
 		Namespace: "default",
 		Kind:      "Deploy",
 		Name:      "orion",
+		Metadata: types.Metadata{
+			RepoTags: []string{
+				"alpine:3.14",
+			},
+			RepoDigests: []string{
+				"alpine:3.14@sha256:8fe1727132b2506c17ba0e1f6a6ed8a016bb1f5735e43b2738cd3fd1979b6260",
+			},
+		},
 		Results: types.Results{
 			{
 				Misconfigurations: []types.DetectedMisconfiguration{
 					{
 						ID:       "ID100",
-						Status:   types.StatusFailure,
+						Status:   types.MisconfStatusFailure,
 						Severity: "LOW",
 					},
 					{
 						ID:       "ID101",
-						Status:   types.StatusFailure,
+						Status:   types.MisconfStatusFailure,
 						Severity: "MEDIUM",
 					},
 					{
 						ID:       "ID102",
-						Status:   types.StatusFailure,
+						Status:   types.MisconfStatusFailure,
 						Severity: "HIGH",
 					},
 					{
 						ID:       "ID103",
-						Status:   types.StatusFailure,
+						Status:   types.MisconfStatusFailure,
 						Severity: "CRITICAL",
 					},
 					{
 						ID:       "ID104",
-						Status:   types.StatusFailure,
+						Status:   types.MisconfStatusFailure,
 						Severity: "UNKNOWN",
 					},
 					{
 						ID:       "ID105",
-						Status:   types.StatusFailure,
+						Status:   types.MisconfStatusFailure,
 						Severity: "LOW",
 					},
 					{
 						ID:       "ID106",
-						Status:   types.StatusFailure,
+						Status:   types.MisconfStatusFailure,
 						Severity: "HIGH",
 					},
 				},
@@ -62,6 +69,14 @@ var (
 		Namespace: "default",
 		Kind:      "Deploy",
 		Name:      "orion",
+		Metadata: types.Metadata{
+			RepoTags: []string{
+				"alpine:3.14",
+			},
+			RepoDigests: []string{
+				"alpine:3.14@sha256:8fe1727132b2506c17ba0e1f6a6ed8a016bb1f5735e43b2738cd3fd1979b6260",
+			},
+		},
 		Results: types.Results{
 			{
 				Vulnerabilities: []types.DetectedVulnerability{
@@ -102,42 +117,50 @@ var (
 		Namespace: "default",
 		Kind:      "Deploy",
 		Name:      "orion",
+		Metadata: types.Metadata{
+			RepoTags: []string{
+				"alpine:3.14",
+			},
+			RepoDigests: []string{
+				"alpine:3.14@sha256:8fe1727132b2506c17ba0e1f6a6ed8a016bb1f5735e43b2738cd3fd1979b6260",
+			},
+		},
 		Results: types.Results{
 			{
 				Misconfigurations: []types.DetectedMisconfiguration{
 					{
 						ID:       "ID100",
-						Status:   types.StatusFailure,
+						Status:   types.MisconfStatusFailure,
 						Severity: "LOW",
 					},
 					{
 						ID:       "ID101",
-						Status:   types.StatusFailure,
+						Status:   types.MisconfStatusFailure,
 						Severity: "MEDIUM",
 					},
 					{
 						ID:       "ID102",
-						Status:   types.StatusFailure,
+						Status:   types.MisconfStatusFailure,
 						Severity: "HIGH",
 					},
 					{
 						ID:       "ID103",
-						Status:   types.StatusFailure,
+						Status:   types.MisconfStatusFailure,
 						Severity: "CRITICAL",
 					},
 					{
 						ID:       "ID104",
-						Status:   types.StatusFailure,
+						Status:   types.MisconfStatusFailure,
 						Severity: "UNKNOWN",
 					},
 					{
 						ID:       "ID105",
-						Status:   types.StatusFailure,
+						Status:   types.MisconfStatusFailure,
 						Severity: "LOW",
 					},
 					{
 						ID:       "ID106",
-						Status:   types.StatusFailure,
+						Status:   types.MisconfStatusFailure,
 						Severity: "HIGH",
 					},
 				},
@@ -181,6 +204,14 @@ var (
 		Namespace: "default",
 		Kind:      "Cronjob",
 		Name:      "hello",
+		Metadata: types.Metadata{
+			RepoTags: []string{
+				"alpine:3.14",
+			},
+			RepoDigests: []string{
+				"alpine:3.14@sha256:8fe1727132b2506c17ba0e1f6a6ed8a016bb1f5735e43b2738cd3fd1979b6260",
+			},
+		},
 		Results: types.Results{
 			{Vulnerabilities: []types.DetectedVulnerability{{VulnerabilityID: "CVE-2020-9999"}}},
 		},
@@ -190,6 +221,14 @@ var (
 		Namespace: "default",
 		Kind:      "Pod",
 		Name:      "prometheus",
+		Metadata: types.Metadata{
+			RepoTags: []string{
+				"alpine:3.14",
+			},
+			RepoDigests: []string{
+				"alpine:3.14@sha256:8fe1727132b2506c17ba0e1f6a6ed8a016bb1f5735e43b2738cd3fd1979b6260",
+			},
+		},
 		Results: types.Results{
 			{Misconfigurations: []types.DetectedMisconfiguration{{ID: "ID100"}}},
 		},
@@ -204,7 +243,7 @@ var (
 				Misconfigurations: []types.DetectedMisconfiguration{
 					{
 						ID:       "ID100",
-						Status:   types.StatusFailure,
+						Status:   types.MisconfStatusFailure,
 						Severity: "MEDIUM",
 					},
 				},
@@ -218,7 +257,7 @@ var (
 		Name:      "lua",
 		Results: types.Results{
 			{
-				Secrets: []ftypes.SecretFinding{
+				Secrets: []types.DetectedSecret{
 					{
 						RuleID:   "secret1",
 						Severity: "CRITICAL",
@@ -241,28 +280,28 @@ var (
 				Misconfigurations: []types.DetectedMisconfiguration{
 					{
 						ID:       "KSV-ID100",
-						Status:   types.StatusFailure,
+						Status:   types.MisconfStatusFailure,
 						Severity: "LOW",
 					},
 					{
 						ID:       "KSV-ID101",
-						Status:   types.StatusFailure,
+						Status:   types.MisconfStatusFailure,
 						Severity: "MEDIUM",
 					},
 					{
 						ID:       "KSV-ID102",
-						Status:   types.StatusFailure,
+						Status:   types.MisconfStatusFailure,
 						Severity: "HIGH",
 					},
 
 					{
 						ID:       "KCV-ID100",
-						Status:   types.StatusFailure,
+						Status:   types.MisconfStatusFailure,
 						Severity: "LOW",
 					},
 					{
 						ID:       "KCV-ID101",
-						Status:   types.StatusFailure,
+						Status:   types.MisconfStatusFailure,
 						Severity: "MEDIUM",
 					},
 				},
@@ -496,11 +535,10 @@ func Test_separateMisconfigReports(t *testing.T) {
 					Resources: []Resource{
 						{Kind: "Deployment"},
 						{Kind: "StatefulSet"},
-						{Kind: "Pod"},
 					},
 				},
-				{Resources: []Resource{{Kind: "Role"}}},
 				{Resources: []Resource{{Kind: "Pod"}}},
+				{Resources: []Resource{{Kind: "Role"}}},
 			},
 		},
 		{
@@ -517,7 +555,6 @@ func Test_separateMisconfigReports(t *testing.T) {
 					Resources: []Resource{
 						{Kind: "Deployment"},
 						{Kind: "StatefulSet"},
-						{Kind: "Pod"},
 					},
 				},
 				{Resources: []Resource{{Kind: "Pod"}}},
@@ -541,7 +578,6 @@ func Test_separateMisconfigReports(t *testing.T) {
 					Resources: []Resource{
 						{Kind: "Deployment"},
 						{Kind: "StatefulSet"},
-						{Kind: "Pod"},
 					},
 				},
 			},

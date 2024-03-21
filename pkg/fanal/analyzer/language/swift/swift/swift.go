@@ -5,12 +5,12 @@ import (
 	"os"
 	"path"
 
-	"github.com/aquasecurity/go-dep-parser/pkg/swift/swift"
+	"golang.org/x/xerrors"
+
+	"github.com/aquasecurity/trivy/pkg/dependency/parser/swift/swift"
 	"github.com/aquasecurity/trivy/pkg/fanal/analyzer"
 	"github.com/aquasecurity/trivy/pkg/fanal/analyzer/language"
 	"github.com/aquasecurity/trivy/pkg/fanal/types"
-
-	"golang.org/x/xerrors"
 )
 
 func init() {

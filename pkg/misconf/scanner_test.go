@@ -28,14 +28,30 @@ func TestScannerOption_Sort(t *testing.T) {
 		{
 			name: "happy path",
 			fields: fields{
-				Namespaces:  []string{"main", "custom", "default"},
+				Namespaces: []string{
+					"main",
+					"custom",
+					"default",
+				},
 				PolicyPaths: []string{"policy"},
-				DataPaths:   []string{"data/b", "data/c", "data/a"},
+				DataPaths: []string{
+					"data/b",
+					"data/c",
+					"data/a",
+				},
 			},
 			want: ScannerOption{
-				Namespaces:  []string{"custom", "default", "main"},
+				Namespaces: []string{
+					"custom",
+					"default",
+					"main",
+				},
 				PolicyPaths: []string{"policy"},
-				DataPaths:   []string{"data/a", "data/b", "data/c"},
+				DataPaths: []string{
+					"data/a",
+					"data/b",
+					"data/c",
+				},
 			},
 		},
 		{
@@ -79,7 +95,7 @@ func TestScanner_Scan(t *testing.T) {
 		fields           fields
 		files            []file
 		wantFilePath     string
-		wantFileType     string
+		wantFileType     types.ConfigType
 		misconfsExpected int
 	}{
 		{
@@ -117,7 +133,7 @@ func TestScanner_Scan(t *testing.T) {
 		},
 		{
 			name:        "happy path. terraform plan file",
-			scannerFunc: NewTerraformPlanScanner,
+			scannerFunc: NewTerraformPlanJSONScanner,
 			files: []file{
 				{
 					path:    "main.tfplan.json",
@@ -125,7 +141,7 @@ func TestScanner_Scan(t *testing.T) {
 				},
 			},
 			wantFilePath:     "main.tf",
-			wantFileType:     types.TerraformPlan,
+			wantFileType:     types.TerraformPlanJSON,
 			misconfsExpected: 2,
 		},
 	}

@@ -9,7 +9,7 @@ import (
 
 	"golang.org/x/xerrors"
 
-	"github.com/aquasecurity/go-dep-parser/pkg/nodejs/packagejson"
+	"github.com/aquasecurity/trivy/pkg/dependency/parser/nodejs/packagejson"
 	"github.com/aquasecurity/trivy/pkg/fanal/types"
 	"github.com/aquasecurity/trivy/pkg/licensing"
 	"github.com/aquasecurity/trivy/pkg/log"
@@ -29,7 +29,7 @@ func NewLicense(classifierConfidenceLevel float64) *License {
 }
 
 func (l *License) Traverse(fsys fs.FS, root string) (map[string][]string, error) {
-	licenses := map[string][]string{}
+	licenses := make(map[string][]string)
 	walkDirFunc := func(pkgJSONPath string, d fs.DirEntry, r io.Reader) error {
 		pkg, err := l.parser.Parse(r)
 		if err != nil {

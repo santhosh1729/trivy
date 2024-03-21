@@ -17,20 +17,20 @@ import (
 	"golang.org/x/exp/slices"
 	"golang.org/x/xerrors"
 
-	"github.com/aquasecurity/go-dep-parser/pkg/golang/mod"
-	"github.com/aquasecurity/go-dep-parser/pkg/golang/sum"
-	dio "github.com/aquasecurity/go-dep-parser/pkg/io"
-	godeptypes "github.com/aquasecurity/go-dep-parser/pkg/types"
+	"github.com/aquasecurity/trivy/pkg/dependency/parser/golang/mod"
+	"github.com/aquasecurity/trivy/pkg/dependency/parser/golang/sum"
+	godeptypes "github.com/aquasecurity/trivy/pkg/dependency/types"
 	"github.com/aquasecurity/trivy/pkg/fanal/analyzer"
 	"github.com/aquasecurity/trivy/pkg/fanal/analyzer/language"
 	"github.com/aquasecurity/trivy/pkg/fanal/types"
 	"github.com/aquasecurity/trivy/pkg/licensing"
 	"github.com/aquasecurity/trivy/pkg/log"
 	"github.com/aquasecurity/trivy/pkg/utils/fsutils"
+	xio "github.com/aquasecurity/trivy/pkg/x/io"
 )
 
 func init() {
-	analyzer.RegisterPostAnalyzer(types.GoMod, newGoModAnalyzer)
+	analyzer.RegisterPostAnalyzer(analyzer.TypeGoMod, newGoModAnalyzer)
 }
 
 const version = 2
@@ -132,7 +132,7 @@ func (a *gomodAnalyzer) fillAdditionalData(apps []types.Application) error {
 		return nil
 	}
 
-	licenses := map[string][]string{}
+	licenses := make(map[string][]string)
 	for i, app := range apps {
 		// Actually used dependencies
 		usedLibs := lo.SliceToMap(app.Libraries, func(pkg types.Package) (string, types.Package) {
@@ -180,7 +180,7 @@ func (a *gomodAnalyzer) fillAdditionalData(apps []types.Application) error {
 	return nil
 }
 
-func (a *gomodAnalyzer) collectDeps(modDir string, pkgID string) (godeptypes.Dependency, error) {
+func (a *gomodAnalyzer) collectDeps(modDir, pkgID string) (godeptypes.Dependency, error) {
 	// e.g. $GOPATH/pkg/mod/github.com/aquasecurity/go-dep-parser@v0.0.0-20220406074731-71021a481237/go.mod
 	modPath := filepath.Join(modDir, "go.mod")
 	f, err := os.Open(modPath)
@@ -216,7 +216,7 @@ func parse(fsys fs.FS, path string, parser godeptypes.Parser) (*types.Applicatio
 	}
 	defer f.Close()
 
-	file, ok := f.(dio.ReadSeekCloserAt)
+	file, ok := f.(xio.ReadSeekCloserAt)
 	if !ok {
 		return nil, xerrors.Errorf("type assertion error: %w", err)
 	}
@@ -239,7 +239,7 @@ func mergeGoSum(gomod, gosum *types.Application) {
 	if gomod == nil || gosum == nil {
 		return
 	}
-	uniq := map[string]types.Package{}
+	uniq := make(map[string]types.Package)
 	for _, lib := range gomod.Libraries {
 		// It will be used for merging go.sum.
 		uniq[lib.Name] = lib
@@ -289,12 +289,14 @@ func findLicense(dir string, classifierConfidenceLevel float64) ([]string, error
 		}
 		return nil
 	})
+
+	switch {
 	// The module path may not exist
-	if errors.Is(err, os.ErrNotExist) {
+	case errors.Is(err, os.ErrNotExist):
 		return nil, nil
-	} else if err != nil && !errors.Is(err, io.EOF) {
+	case err != nil && !errors.Is(err, io.EOF):
 		return nil, fmt.Errorf("finding a known open source license: %w", err)
-	} else if license == nil || len(license.Findings) == 0 {
+	case license == nil || len(license.Findings) == 0:
 		return nil, nil
 	}
 
