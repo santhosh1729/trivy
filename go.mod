@@ -24,7 +24,7 @@ require (
 	github.com/aquasecurity/trivy-aws v0.8.0
 	github.com/aquasecurity/trivy-db v0.0.0-20231005141211-4fc651f7ac8d
 	github.com/aquasecurity/trivy-java-db v0.0.0-20240109071736-184bd7481d48
-	github.com/aquasecurity/trivy-kubernetes v0.6.3
+	github.com/aquasecurity/trivy-kubernetes v0.6.6
 	github.com/aquasecurity/trivy-policies v0.10.0
 	github.com/aws/aws-sdk-go-v2 v1.25.2
 	github.com/aws/aws-sdk-go-v2/config v1.27.4
@@ -48,8 +48,8 @@ require (
 	github.com/go-openapi/strfmt v0.22.0
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/golang-jwt/jwt v3.2.2+incompatible
-	github.com/golang/protobuf v1.5.3
-	github.com/google/go-containerregistry v0.19.0
+	github.com/golang/protobuf v1.5.4
+	github.com/google/go-containerregistry v0.19.1
 	github.com/google/licenseclassifier/v2 v2.0.0
 	github.com/google/uuid v1.6.0
 	github.com/google/wire v0.5.0
@@ -96,7 +96,7 @@ require (
 	github.com/spf13/cobra v1.8.0
 	github.com/spf13/pflag v1.0.5
 	github.com/spf13/viper v1.18.2
-	github.com/stretchr/testify v1.8.4
+	github.com/stretchr/testify v1.9.0
 	github.com/testcontainers/testcontainers-go v0.28.0
 	github.com/testcontainers/testcontainers-go/modules/localstack v0.26.0
 	github.com/tetratelabs/wazero v1.7.0
@@ -114,7 +114,7 @@ require (
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2
 	google.golang.org/protobuf v1.33.0
 	gopkg.in/yaml.v3 v3.0.1
-	k8s.io/api v0.29.1
+	k8s.io/api v0.29.3
 	k8s.io/utils v0.0.0-20231127182322-b307cd553661
 	modernc.org/sqlite v1.28.0
 )
@@ -176,7 +176,7 @@ require (
 	github.com/antchfx/xpath v1.2.3 // indirect
 	github.com/apparentlymart/go-textseg/v15 v15.0.0 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2 // indirect
-	github.com/aws/aws-sdk-go v1.49.21 // indirect
+	github.com/aws/aws-sdk-go v1.51.16 // indirect
 	github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream v1.6.1 // indirect
 	github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.15.2 // indirect
 	github.com/aws/aws-sdk-go-v2/internal/configsources v1.3.2 // indirect
@@ -366,7 +366,7 @@ require (
 	github.com/skeema/knownhosts v1.2.1 // indirect
 	github.com/sourcegraph/conc v0.3.0 // indirect
 	github.com/spf13/afero v1.11.0 // indirect
-	github.com/stretchr/objx v0.5.0 // indirect
+	github.com/stretchr/objx v0.5.2 // indirect
 	github.com/subosito/gotenv v1.6.0 // indirect
 	github.com/tchap/go-patricia/v2 v2.3.1 // indirect
 	github.com/ulikunitz/xz v0.5.11 // indirect
@@ -403,14 +403,14 @@ require (
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	k8s.io/apiextensions-apiserver v0.29.0 // indirect
-	k8s.io/apimachinery v0.29.1 // indirect
+	k8s.io/apimachinery v0.29.3 // indirect
 	k8s.io/apiserver v0.29.0 // indirect
-	k8s.io/cli-runtime v0.29.0 // indirect
-	k8s.io/client-go v0.29.0 // indirect
-	k8s.io/component-base v0.29.0 // indirect
+	k8s.io/cli-runtime v0.29.3 // indirect
+	k8s.io/client-go v0.29.3 // indirect
+	k8s.io/component-base v0.29.3 // indirect
 	k8s.io/klog/v2 v2.120.0 // indirect
 	k8s.io/kube-openapi v0.0.0-20231010175941-2dd684a91f00 // indirect
-	k8s.io/kubectl v0.29.0 // indirect
+	k8s.io/kubectl v0.29.3 // indirect
 	lukechampine.com/uint128 v1.2.0 // indirect
 	modernc.org/cc/v3 v3.40.0 // indirect
 	modernc.org/ccgo/v3 v3.16.13 // indirect
