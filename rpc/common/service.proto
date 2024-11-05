@@ -54,6 +54,7 @@ message Package {
   string            digest      = 16;
   bool              dev         = 17;
   bool              indirect    = 18;
+  string            maintainer = 21;
 }
 
 message PkgIdentifier {
