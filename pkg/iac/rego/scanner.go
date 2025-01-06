@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"io"
 	"io/fs"
-	"maps"
 	"strings"
 
 	"github.com/open-policy-agent/opa/ast"
@@ -22,29 +21,26 @@ import (
 	"github.com/aquasecurity/trivy/pkg/iac/scanners/options"
 	"github.com/aquasecurity/trivy/pkg/iac/types"
 	"github.com/aquasecurity/trivy/pkg/log"
+	"github.com/aquasecurity/trivy/pkg/set"
 )
 
-var checkTypesWithSubtype = map[types.Source]struct{}{
-	types.SourceCloud:      {},
-	types.SourceDefsec:     {},
-	types.SourceKubernetes: {},
-}
+var checkTypesWithSubtype = set.New[types.Source](types.SourceCloud, types.SourceDefsec, types.SourceKubernetes)
 
 var supportedProviders = makeSupportedProviders()
 
-func makeSupportedProviders() map[string]struct{} {
-	m := make(map[string]struct{})
+func makeSupportedProviders() set.Set[string] {
+	m := set.New[string]()
 	for _, p := range providers.AllProviders() {
-		m[string(p)] = struct{}{}
+		m.Append(string(p))
 	}
-	m["kind"] = struct{}{} // kubernetes
+	m.Append("kind") // kubernetes
 	return m
 }
 
 var _ options.ConfigurableScanner = (*Scanner)(nil)
 
 type Scanner struct {
-	ruleNamespaces           map[string]struct{}
+	ruleNamespaces           set.Set[string]
 	policies                 map[string]*ast.Module
 	store                    storage.Store
 	runtimeValues            *ast.Term
@@ -70,17 +66,7 @@ type Scanner struct {
 	embeddedChecks map[string]*ast.Module
 	customSchemas  map[string][]byte
 
-	disabledCheckIDs map[string]struct{}
-}
-
-func (s *Scanner) SetIncludeDeprecatedChecks(b bool) {
-	s.includeDeprecatedChecks = b
-}
-
-func (s *Scanner) SetRegoOnly(bool) {}
-
-func (s *Scanner) SetFrameworks(frameworks []framework.Framework) {
-	s.frameworks = frameworks
+	disabledCheckIDs set.Set[string]
 }
 
 func (s *Scanner) trace(heading string, input any) {
@@ -113,14 +99,12 @@ func NewScanner(source types.Source, opts ...options.ScannerOption) *Scanner {
 	s := &Scanner{
 		regoErrorLimit:   ast.CompileErrorLimitDefault,
 		sourceType:       source,
-		ruleNamespaces:   make(map[string]struct{}),
+		ruleNamespaces:   builtinNamespaces.Clone(),
 		runtimeValues:    addRuntimeValues(),
 		logger:           log.WithPrefix("rego"),
 		customSchemas:    make(map[string][]byte),
-		disabledCheckIDs: make(map[string]struct{}),
+		disabledCheckIDs: set.New[string](),
 	}
-
-	maps.Copy(s.ruleNamespaces, builtinNamespaces)
 
 	for _, opt := range opts {
 		opt(s)
@@ -157,7 +141,7 @@ func (s *Scanner) runQuery(ctx context.Context, query string, input ast.Value, d
 	}
 
 	instance := rego.New(regoOptions...)
-	set, err := instance.Eval(ctx)
+	resultSet, err := instance.Eval(ctx)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -175,7 +159,7 @@ func (s *Scanner) runQuery(ctx context.Context, query string, input ast.Value, d
 			traces = strings.Split(traceBuffer.String(), "\n")
 		}
 	}
-	return set, traces, nil
+	return resultSet, traces, nil
 }
 
 type Input struct {
@@ -208,7 +192,7 @@ func (s *Scanner) ScanInput(ctx context.Context, inputs ...Input) (scan.Results,
 
 		namespace := getModuleNamespace(module)
 		topLevel := strings.Split(namespace, ".")[0]
-		if _, ok := s.ruleNamespaces[topLevel]; !ok {
+		if !s.ruleNamespaces.Contains(topLevel) {
 			continue
 		}
 
@@ -237,17 +221,17 @@ func (s *Scanner) ScanInput(ctx context.Context, inputs ...Input) (scan.Results,
 			continue
 		}
 
-		usedRules := make(map[string]struct{})
+		usedRules := set.New[string]()
 
 		// all rules
 		for _, rule := range module.Rules {
 			ruleName := rule.Head.Name.String()
-			if _, ok := usedRules[ruleName]; ok {
+			if usedRules.Contains(ruleName) {
 				continue
 			}
-			usedRules[ruleName] = struct{}{}
+			usedRules.Append(ruleName)
 			if isEnforcedRule(ruleName) {
-				ruleResults, err := s.applyRule(ctx, namespace, ruleName, inputs, staticMeta.InputOptions.Combined)
+				ruleResults, err := s.applyRule(ctx, namespace, ruleName, inputs)
 				if err != nil {
 					s.logger.Error(
 						"Error occurred while applying rule from check",
@@ -267,8 +251,7 @@ func (s *Scanner) ScanInput(ctx context.Context, inputs ...Input) (scan.Results,
 }
 
 func isPolicyWithSubtype(sourceType types.Source) bool {
-	_, exists := checkTypesWithSubtype[sourceType]
-	return exists
+	return checkTypesWithSubtype.Contains(sourceType)
 }
 
 func checkSubtype(ii map[string]any, provider string, subTypes []SubType) bool {
@@ -300,7 +283,7 @@ func isPolicyApplicable(staticMetadata *StaticMetadata, inputs ...Input) bool {
 	for _, input := range inputs {
 		if ii, ok := input.Contents.(map[string]any); ok {
 			for provider := range ii {
-				if _, exists := supportedProviders[provider]; !exists {
+				if !supportedProviders.Contains(provider) {
 					continue
 				}
 
@@ -328,14 +311,7 @@ func parseRawInput(input any) (ast.Value, error) {
 	return ast.InterfaceToValue(input)
 }
 
-func (s *Scanner) applyRule(ctx context.Context, namespace, rule string, inputs []Input, combined bool) (scan.Results, error) {
-
-	// handle combined evaluations if possible
-	if combined {
-		s.trace("INPUT", inputs)
-		return s.applyRuleCombined(ctx, namespace, rule, inputs)
-	}
-
+func (s *Scanner) applyRule(ctx context.Context, namespace, rule string, inputs []Input) (scan.Results, error) {
 	var results scan.Results
 	qualified := fmt.Sprintf("data.%s.%s", namespace, rule)
 	for _, input := range inputs {
@@ -346,12 +322,12 @@ func (s *Scanner) applyRule(ctx context.Context, namespace, rule string, inputs 
 			continue
 		}
 
-		set, traces, err := s.runQuery(ctx, qualified, parsedInput, false)
+		resultSet, traces, err := s.runQuery(ctx, qualified, parsedInput, false)
 		if err != nil {
 			return nil, err
 		}
-		s.trace("RESULTSET", set)
-		ruleResults := s.convertResults(set, input, namespace, rule, traces)
+		s.trace("RESULTSET", resultSet)
+		ruleResults := s.convertResults(resultSet, input, namespace, rule, traces)
 		if len(ruleResults) == 0 { // It passed because we didn't find anything wrong (NOT because it didn't exist)
 			var result regoResult
 			result.FS = input.FS
@@ -366,30 +342,10 @@ func (s *Scanner) applyRule(ctx context.Context, namespace, rule string, inputs 
 	return results, nil
 }
 
-func (s *Scanner) applyRuleCombined(ctx context.Context, namespace, rule string, inputs []Input) (scan.Results, error) {
-	if len(inputs) == 0 {
-		return nil, nil
-	}
-
-	parsed, err := parseRawInput(inputs)
-	if err != nil {
-		return nil, fmt.Errorf("failed to parse input: %w", err)
-	}
-
-	qualified := fmt.Sprintf("data.%s.%s", namespace, rule)
-	set, traces, err := s.runQuery(ctx, qualified, parsed, false)
-	if err != nil {
-		return nil, err
-	}
-	return s.convertResults(set, inputs[0], namespace, rule, traces), nil
-}
-
 // severity is now set with metadata, so deny/warn/violation now behave the same way
 func isEnforcedRule(name string) bool {
 	switch {
-	case name == "deny", strings.HasPrefix(name, "deny_"),
-		name == "warn", strings.HasPrefix(name, "warn_"),
-		name == "violation", strings.HasPrefix(name, "violation_"):
+	case name == "deny", strings.HasPrefix(name, "deny_"):
 		return true
 	}
 	return false
