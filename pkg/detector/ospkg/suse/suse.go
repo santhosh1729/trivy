@@ -150,14 +150,14 @@ func (s *Scanner) Detect(ctx context.Context, osVer string, _ *ftypes.Repository
 
 // IsSupportedVersion checks if OSFamily can be scanned using SUSE scanner
 func (s *Scanner) IsSupportedVersion(ctx context.Context, osFamily ftypes.OSType, osVer string) bool {
-	if osFamily == ftypes.SLES {
+	if osFamily == ftypes.SLES || osFamily == ftypes.SLESLegacy {
 		return osver.Supported(ctx, slesEolDates, osFamily, osVer)
 	}
-	if osFamily == ftypes.SLEMicro {
+	if osFamily == ftypes.SLEMicro || osFamily == ftypes.SLEMicroLegacy {
 		return osver.Supported(ctx, slemicroEolDates, osFamily, osVer)
 	}
 	// tumbleweed is a rolling release, it has no version and no eol
-	if osFamily == ftypes.OpenSUSETumbleweed {
+	if osFamily == ftypes.OpenSUSETumbleweed || osFamily == ftypes.OpenSUSETumbleweedLegacy {
 		return true
 	}
 	return osver.Supported(ctx, opensuseEolDates, osFamily, osVer)

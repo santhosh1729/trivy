@@ -41,6 +41,12 @@ const (
 	SLES               OSType = "sles"
 	Ubuntu             OSType = "ubuntu"
 	Wolfi              OSType = "wolfi"
+
+	// These below constants are retained for backward compatibility with older versions of Aqua
+	OpenSUSELeapLegacy       OSType = "opensuse.leap"
+	OpenSUSETumbleweedLegacy OSType = "opensuse.tumbleweed"
+	SLEMicroLegacy           OSType = "suse linux enterprise micro"
+	SLESLegacy               OSType = "suse linux enterprise server"
 )
 
 // Programming language dependencies

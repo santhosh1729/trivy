@@ -360,10 +360,12 @@ func parseRPM(fos *ftypes.OS, modularityLabel string) (ftypes.OSType, packageurl
 
 	family := fos.Family
 	// SLES string has whitespace, also highlevel family is not the same as distro
-	if fos.Family == ftypes.SLES || fos.Family == ftypes.SLEMicro {
+	if fos.Family == ftypes.SLES || fos.Family == ftypes.SLEMicro ||
+		fos.Family == ftypes.SLESLegacy || fos.Family == ftypes.SLEMicroLegacy {
 		family = "suse"
 	}
-	if fos.Family == ftypes.OpenSUSETumbleweed || fos.Family == ftypes.OpenSUSELeap {
+	if fos.Family == ftypes.OpenSUSETumbleweed || fos.Family == ftypes.OpenSUSELeap ||
+		fos.Family == ftypes.OpenSUSETumbleweedLegacy || fos.Family == ftypes.OpenSUSELeapLegacy {
 		family = "opensuse"
 	}
 
@@ -479,7 +481,9 @@ func purlType(t ftypes.TargetType) string {
 		return packageurl.TypeDebian
 	case ftypes.RedHat, ftypes.CentOS, ftypes.Rocky, ftypes.Alma,
 		ftypes.Amazon, ftypes.Fedora, ftypes.Oracle, ftypes.OpenSUSE,
-		ftypes.OpenSUSELeap, ftypes.OpenSUSETumbleweed, ftypes.SLES, ftypes.SLEMicro, ftypes.Photon,
+		ftypes.OpenSUSELeap, ftypes.OpenSUSETumbleweed, ftypes.SLES,
+		ftypes.SLEMicro, ftypes.OpenSUSELeapLegacy, ftypes.OpenSUSETumbleweedLegacy,
+		ftypes.SLESLegacy, ftypes.SLEMicroLegacy, ftypes.Photon,
 		ftypes.Azure, ftypes.CBLMariner:
 		return packageurl.TypeRPM
 	case TypeOCI:
